@@ -29,19 +29,17 @@ class CommentForm extends Component {
     }
 
     handleSubmit(values) {
+        this.toggleModal();
         console.log("Current State is: " + JSON.stringify(values));
-        alert("Current State is: " + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
         return (
             <div>
-            <div>
                 <Button outline onClick={this.toggleModal}>
                     <span className="fa fa-pencil fa-lg"></span> Submit Comment
                 </Button>
-            </div>
-            <div>
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                     <ModalBody>
@@ -90,7 +88,6 @@ class CommentForm extends Component {
                     </ModalBody>
                 </Modal>
             </div>
-            </div>
         );
     }
 }
@@ -107,7 +104,7 @@ function RenderDish({dish}) {
     );
 }
 
-function RenderComments({comments}) {
+function RenderComments({comments, addComment, dishId}) {
     const comment = comments.map((comment) => {
         return (
             <ul className="list-unstyled" key={comment.id}>
@@ -120,7 +117,7 @@ function RenderComments({comments}) {
         <div>
             <h4>Comments</h4>
             {comment}
-            <CommentForm />
+            <CommentForm dishId={dishId} addComment={addComment} />
         </div>
     );
 };
@@ -146,7 +143,10 @@ const DishDetail = (props) => {
                         <RenderDish dish={props.dish} />
                     </div>
                     <div className="col-12 col-md-5 m-1">
-                        <RenderComments comments={props.comments} />  
+                        <RenderComments comments={props.comments} 
+                            addComment={props.addComment}
+                            dishId={props.dish.id}
+                        />  
                     </div>  
                 </div>
             </div>
